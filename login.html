@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Comanda Digital - Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>Sistema de Comanda Digital</h1>
+            <p>Panel de Administración</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+            </div>
+            
+            <button type="submit" class="btn" id="loginBtn">
+                <span id="loginText">Iniciar Sesión</span>
+                <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+            </button>
+            
+            <div id="errorMessage" class="error-message">
+                Usuario o contraseña incorrectos. Intente nuevamente.
+            </div>
+        </form>
+        
+        <div class="admin-info">
+            <p>Recuerda cerrar tu sesion</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            // Mostrar loading
+            loginText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            loginBtn.disabled = true;
+            
+            try {
+                // Aquí se conectaría con el backend/API
+                const response = await fakeLoginAPI(username, password);
+                
+                if (response.success) {
+                    // Manda a la pagina del administrador
+                    window.location.href = 'admin.html';
+                } else {
+                    // Mostrar mensaje de error
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error en login:', error);
+                document.getElementById('errorMessage').textContent = 'Error de conexión. Intente nuevamente.';
+                document.getElementById('errorMessage').style.display = 'block';
+            } finally {
+                // Ocultar loading
+                loginText.style.display = 'inline-block';
+                spinner.style.display = 'none';
+                loginBtn.disabled = false;
+            }
+        });
+
+        // Api para prueba de inicio de sesion 
+        async function fakeLoginAPI(username, password) {
+            // delay de red
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // usuario y contraseña para prueba 
+            const validUsers = {
+                'admin': 'password123'
+            };
+            
+            return {
+                success: validUsers[username] === password,
+                user: username,
+                role: Object.keys(validUsers).includes(username) ? username : null
+            };
+        }
+    </script>
+</body>
+</html>
