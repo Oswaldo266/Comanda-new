@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taquería El Informatico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+    <style>
+        /* Pantalla de selección de mesas */
+        #seleccion-mesa {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f4f4f4;
+        }
+        .mesas {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .mesa {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 10px;
+            width: 120px;
+            height: 120px;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        .mesa:hover {
+            transform: scale(1.1);
+            background: #e0e0e0;
+        }
+        /* Ocultar menú hasta seleccionar mesa */
+        #menu-principal {
+            display: none;
+        }
+        .mesa-activa {
+            text-align: center;
+            background: #333;
+            color: white;
+            padding: 10px;
+            position: relative;
+        }
+        .btn-regresar {
+            position: absolute;
+            left: 15px;
+            top: 10px;
+            background: #dc3545;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-regresar:hover {
+            background: #b52a38;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla inicial: Selección de mesas -->
+    <div id="seleccion-mesa">
+        <h1>Selecciona tu Mesa</h1>
+        <div class="mesas">
+            <div class="mesa" onclick="abrirMenu(1)">Mesa 1</div>
+            <div class="mesa" onclick="abrirMenu(2)">Mesa 2</div>
+            <div class="mesa" onclick="abrirMenu(3)">Mesa 3</div>
+            <div class="mesa" onclick="abrirMenu(4)">Mesa 4</div>
+        </div>
+    </div>
+
+    <!-- Menú principal de la Taquería -->
+    <div id="menu-principal">
+        <header>
+            <div class="header-top">
+                <h1>Taquería El Informatico</h1>
+                <div class="cart-icon" id="header-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+            <div class="mesa-activa">
+                <button class="btn-regresar" onclick="regresarMesas()">← Cambiar Mesa</button>
+                <h2 id="mesa-seleccionada"></h2>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#">Menú</a></li>
+                    <li><a href="#">Promociones</a></li>
+                    <li><a href="#">Sucursales</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- 👇 Aquí va tu menú original -->
+            <section class="menu-section">
+                <h2>Tacos</h2>
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <h3>Taco al Pastor</h3>
+                        <p class="price">$25.00</p>
+                        <button class="add-to-cart" data-item="Taco al Pastor" data-price="25">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <h3>Taco de Bistec</h3>
+                        <p class="price">$28.00</p>
+                        <button class="add-to-cart" data-item="Taco de Bistec" data-price="28">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <h3>Taco de Suadero</h3>
+                        <p class="price">$30.00</p>
+                        <button class="add-to-cart" data-item="Taco de Suadero" data-price="30">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <h3>Taco de Chorizo</h3>
+                        <p class="price">$27.00</p>
+                        <button class="add-to-cart" data-item="Taco de Chorizo" data-price="27">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bebidas y Especialidades igual como tenías -->
+        </main>
+
+        <div class="floating-cart" id="floating-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge">0</span>
+        </div>
+
+        <div class="cart-modal" id="cart-modal">
+            <div class="cart-content">
+                <div class="cart-header">
+                    <h2>Tu Pedido</h2>
+                    <span class="close-cart" id="close-cart">&times;</span>
+                </div>
+                <div class="cart-items" id="cart-items">
+                    <p class="empty-cart-message">No has agregado items a tu pedido</p>
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total-amount">$0.00</span>
+                </div>
+                <button class="checkout-btn">Continuar con el pago</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirMenu(numMesa) {
+            document.getElementById("mesa-seleccionada").innerText = "Mesa " + numMesa;
+            document.getElementById("seleccion-mesa").style.display = "none";
+            document.getElementById("menu-principal").style.display = "block";
+        }
+
+        function regresarMesas() {
+            
+            document.getElementById("menu-principal").style.display = "none";
+            document.getElementById("seleccion-mesa").style.display = "flex";
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

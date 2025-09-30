@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taquería El Informatico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <h1>Taquería El Informatico</h1>
+            <div class="cart-icon" id="header-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li class="active"><a href="#">Menú</a></li>
+                <li><a href="#">Promociones</a></li>
+                <li><a href="#">Sucursales</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="menu-section">
+            <h2>Tacos</h2>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <h3>Taco al Pastor</h3>
+                    <p class="price">$25.00</p>
+                    <button class="add-to-cart" data-item="Taco al Pastor" data-price="25">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Taco de Bistec</h3>
+                    <p class="price">$28.00</p>
+                    <button class="add-to-cart" data-item="Taco de Bistec" data-price="28">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Taco de Suadero</h3>
+                    <p class="price">$30.00</p>
+                    <button class="add-to-cart" data-item="Taco de Suadero" data-price="30">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Taco de Chorizo</h3>
+                    <p class="price">$27.00</p>
+                    <button class="add-to-cart" data-item="Taco de Chorizo" data-price="27">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="menu-section">
+            <h2>Bebidas</h2>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <h3>Refresco</h3>
+                    <p class="price">$25.00</p>
+                    <button class="add-to-cart" data-item="Refresco" data-price="25">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Agua Natural</h3>
+                    <p class="price">$20.00</p>
+                    <button class="add-to-cart" data-item="Agua Natural" data-price="20">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Agua de Sabor</h3>
+                    <p class="price">$22.00</p>
+                    <button class="add-to-cart" data-item="Agua de Sabor" data-price="22">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Cerveza</h3>
+                    <p class="price">$45.00</p>
+                    <button class="add-to-cart" data-item="Cerveza" data-price="45">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="menu-section">
+            <h2>Especialidades</h2>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <h3>Quesadilla</h3>
+                    <p class="price">$40.00</p>
+                    <button class="add-to-cart" data-item="Quesadilla" data-price="40">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Sincronizada</h3>
+                    <p class="price">$55.00</p>
+                    <button class="add-to-cart" data-item="Sincronizada" data-price="55">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Gringa</h3>
+                    <p class="price">$60.00</p>
+                    <button class="add-to-cart" data-item="Gringa" data-price="60">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="menu-item">
+                    <h3>Volcán</h3>
+                    <p class="price">$65.00</p>
+                    <button class="add-to-cart" data-item="Volcán" data-price="65">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+   
+    <div class="floating-cart" id="floating-cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge">0</span>
+    </div>
+
+    
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>Tu Pedido</h2>
+                <span class="close-cart" id="close-cart">&times;</span>
+            </div>
+            <div class="cart-items" id="cart-items">
+                <p class="empty-cart-message">No has agregado items a tu pedido</p>
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-amount">$0.00</span>
+            </div>
+            <button class="checkout-btn">Continuar con el pago</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
