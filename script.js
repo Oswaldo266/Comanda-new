@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cart = [];
     let total = 0;
     
-    
+    // Elementos del DOM
     const cartItemsEl = document.getElementById('cart-items');
     const cartTotalEl = document.getElementById('cart-total-amount');
     const cartBadgeEl = document.querySelector('.cart-badge');
@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerCartEl = document.getElementById('header-cart');
     const checkoutBtn = document.querySelector('.checkout-btn');
     
-    
+    // Función para actualizar el carrito
     function updateCart() {
-        
+        // Limpiar el carrito
         cartItemsEl.innerHTML = '';
         
         if (cart.length === 0) {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-       
+        // Agregar items al carrito
         cart.forEach(item => {
             const cartItemEl = document.createElement('div');
             cartItemEl.classList.add('cart-item');
@@ -45,15 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
             cartItemsEl.appendChild(cartItemEl);
         });
         
-       
+        // Calcular total
         total = cart.reduce((sum, item) => sum + item.price, 0);
         cartTotalEl.textContent = `$${total.toFixed(2)}`;
         
-        
+        // Actualizar contadores
         cartBadgeEl.textContent = cart.length;
         headerCartCountEl.textContent = cart.length;
         
-        
+        // Agregar event listeners a los botones de eliminar
         document.querySelectorAll('.cart-item-remove').forEach(button => {
             button.addEventListener('click', function() {
                 const itemId = parseInt(this.getAttribute('data-id'));
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    
+    // Función para agregar al carrito
     function addToCart(name, price) {
         const newItem = {
             id: Date.now(), // ID único
@@ -73,11 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
         cart.push(newItem);
         updateCart();
         
-        
+        // Mostrar notificación
         showNotification(`${name} agregado al carrito`);
     }
     
-    
+    // Función para eliminar del carrito
     function removeFromCart(itemId) {
         const itemIndex = cart.findIndex(item => item.id === itemId);
         if (itemIndex !== -1) {
@@ -87,9 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    
+    // Función para mostrar notificación
     function showNotification(message) {
-        
+        // Eliminar notificación existente si hay una
         const existingNotification = document.querySelector('.notification');
         if (existingNotification) {
             existingNotification.remove();
@@ -100,13 +100,13 @@ document.addEventListener('DOMContentLoaded', function() {
         notification.textContent = message;
         document.body.appendChild(notification);
         
-        
+        // Eliminar la notificación después de 3 segundos
         setTimeout(() => {
             notification.remove();
         }, 3000);
     }
     
-  
+    // Event listeners para botones "Agregar"
     addToCartButtons.forEach(button => {
         button.addEventListener('click', function() {
             const itemName = this.getAttribute('data-item');
@@ -115,49 +115,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-   
+    // Event listener para el botón de carrito flotante
     floatingCartEl.addEventListener('click', function() {
         cartModalEl.style.display = 'flex';
     });
     
-    
+    // Event listener para el icono de carrito en el header
     headerCartEl.addEventListener('click', function() {
         cartModalEl.style.display = 'flex';
     });
     
-    
+    // Event listener para cerrar el modal
     closeCartEl.addEventListener('click', function() {
         cartModalEl.style.display = 'none';
     });
     
-    
+    // Cerrar modal al hacer clic fuera del contenido
     cartModalEl.addEventListener('click', function(e) {
         if (e.target === cartModalEl) {
             cartModalEl.style.display = 'none';
         }
     });
     
-    
+    // Event listener para el botón de pago
     checkoutBtn.addEventListener('click', function() {
         if (cart.length === 0) {
             showNotification('Tu carrito está vacío');
             return;
         }
         
-        
+        // Simular proceso de pago
         showNotification(`Redirigiendo al pago... Total: $${total.toFixed(2)}`);
         
-        
+        // Aquí iría la lógica real de redirección a la pasarela de pago
         setTimeout(() => {
             alert(`¡Gracias por tu compra! Total pagado: $${total.toFixed(2)}`);
             
-            
+            // Vaciar carrito después de la compra
             cart.length = 0;
             updateCart();
             cartModalEl.style.display = 'none';
         }, 2000);
     });
     
-  
+    // Inicializar carrito
     updateCart();
 });
