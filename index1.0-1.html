@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seleccionar Mesa</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    .mesas {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 30px;
+      gap: 20px;
+    }
+    .mesa {
+      background: var(--card-bg);
+      border: 2px solid var(--primary-color);
+      border-radius: 12px;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
+      color: var(--primary-color);
+      transition: transform 0.2s, background 0.3s;
+    }
+    .mesa:hover {
+      transform: scale(1.1);
+      background: var(--secondary-color);
+      color: var(--light-text);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Selecciona tu Mesa</h1>
+  </header>
+
+  <main>
+    <div class="mesas">
+      <div class="mesa" onclick="seleccionarMesa(1)">Mesa 1</div>
+      <div class="mesa" onclick="seleccionarMesa(2)">Mesa 2</div>
+      <div class="mesa" onclick="seleccionarMesa(3)">Mesa 3</div>
+      <div class="mesa" onclick="seleccionarMesa(4)">Mesa 4</div>
+    </div>
+  </main>
+
+  <script>
+    function seleccionarMesa(numMesa) {
+      // Redirige a menu.html con parámetro
+      window.location.href = "menu.html?mesa=" + numMesa;
+    }
+  </script>
+</body>
+</html>
+
