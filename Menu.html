@@ -10,7 +10,7 @@
 <body>
   <header>
     <div class="header-top">
-      <h1>Menú Taquería</h1>
+      <h1>Menú Taquería - Mesa <span id="mesa-numero">?</span></h1>
       <div id="header-cart" class="cart-icon">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count">0</span>
@@ -30,7 +30,7 @@
       <div class="menu-items">
         <div class="menu-item">
           <div class="item-image">
-            <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFjb3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Taco al Pastor">
+            <img src="img/pastor.jpeg" alt="Taco al Pastor">
           </div>
           <h3>Taco al Pastor</h3>
           <p class="price">$15</p>
@@ -38,7 +38,7 @@
         </div>
         <div class="menu-item">
           <div class="item-image">
-            <img src="https://images.unsplash.com/photo-1615870216519-2f9fa575fa5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dGFjb3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Taco de Suadero">
+            <img src="img/suadero.jpeg" alt="Taco de Suadero">
           </div>
           <h3>Taco de Suadero</h3>
           <p class="price">$18</p>
@@ -46,7 +46,7 @@
         </div>
         <div class="menu-item">
           <div class="item-image">
-            <img src="https://www.tacoguy.com.au/wp-content/uploads/2021/08/Tacos-de-bistec-portrait-768x510.jpg?v=1628666948" alt="Taco de Bistec">
+            <img src="img/bistec.jpeg" alt="Taco de Bistec">
           </div>
           <h3>Taco de Bistec</h3>
           <p class="price">$20</p>
@@ -61,7 +61,7 @@
       <div class="menu-items">
         <div class="menu-item">
           <div class="item-image">
-            <img src="https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWd1YSUyMGRlJTIwamFtYWljYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Agua de Jamaica">
+            <img src="img/jamaica.png" alt="Agua de Jamaica">
           </div>
           <h3>Agua de Jamaica</h3>
           <p class="price">$12</p>
@@ -69,7 +69,7 @@
         </div>
         <div class="menu-item">
           <div class="item-image">
-            <img src="https://www.infobae.com/resizer/v2/3KPRFMSC5ZCPRI67PCRXPFOALU.jpg?auth=e51b0ffd65db25693f0b214e467e16a3ce18c3b05e75541fd69d3baf09e60dca&smart=true&width=992&height=556&quality=85" alt="Refresco">
+            <img src="img/refrescos.jpeg" alt="Refresco">
           </div>
           <h3>Refresco</h3>
           <p class="price">$18</p>
@@ -89,7 +89,7 @@
   <div id="cart-modal" class="cart-modal">
     <div class="cart-content">
       <div class="cart-header">
-        <h2>Tu Pedido</h2>
+        <h2>Tu Pedido - Mesa <span id="cart-mesa-numero">?</span></h2>
         <span id="close-cart" class="close-cart">&times;</span>
       </div>
       <div id="cart-items" class="cart-items"></div>
@@ -98,6 +98,24 @@
         <span id="cart-total-amount">$0.00</span>
       </div>
       <button class="checkout-btn">Pagar</button>
+    </div>
+  </div>
+
+  <!-- Modal de pago -->
+  <div id="payment-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Confirmar Pago - Mesa <span id="payment-mesa-numero">?</span></h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="payment-items"></div>
+        <div class="payment-total">
+          <span>Total:</span>
+          <span id="payment-total-amount">$0.00</span>
+        </div>
+      </div>
+      <button class="confirm-payment-btn">Confirmar Pago</button>
     </div>
   </div>
 
