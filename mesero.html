@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taquería El Informático - Meseros</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <h1>Taquería El Informático - Meseros</h1>
+      <div>
+        <a href="index.html" style="color:white; text-decoration:none; font-weight:bold;">
+          ← Volver al inicio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="menu-section">
+      <h2>Pedidos Activos</h2>
+      <div id="pedidos-container" class="menu-items"></div>
+    </section>
+  </main>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const contenedor = document.getElementById('pedidos-container');
+    const pedidos = JSON.parse(localStorage.getItem('pedidos')) || {};
+
+    if (Object.keys(pedidos).length === 0) {
+      contenedor.innerHTML = '<p class="empty-cart-message">No hay pedidos activos</p>';
+      return;
+    }
+
+    // Mostrar pedidos
+    Object.entries(pedidos).forEach(([mesaKey, pedido]) => {
+      const mesaNum = mesaKey.split('_')[1];
+      const fecha = new Date().toLocaleDateString();
+      const hora = new Date().toLocaleTimeString();
+
+      const card = document.createElement('div');
+      card.classList.add('menu-item');
+      
+      const itemsHTML = pedido.map((item, idx) => {
+        let color = "#555";
+        let statusText = item.estado;
+
+        if (item.estado === "listo") color = "#4CAF50"; // verde
+        else if (item.estado === "preparando") color = "#FF9800"; // naranja
+        else if (item.estado === "pendiente") color = "#f44336"; // rojo
+        else if (item.estado === "entregado") color = "#2E8B57"; // verde más oscuro
+
+        return `
+          <div class="pedido-item" data-mesa="${mesaKey}" data-index="${idx}"
+               style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span>${item.nombre} x${item.cantidad}</span>
+            <span style="font-weight:bold; color:${color};">${statusText.toUpperCase()}</span>
+            ${
+              item.estado === "listo"
+              ? `<button class="confirmar-btn" data-mesa="${mesaKey}" data-index="${idx}"
+                 style="background:#4CAF50; color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;">
+                 Entregar</button>`
+              : ""
+            }
+          </div>`;
+      }).join('');
+
+      card.innerHTML = `
+        <h3>Mesa ${mesaNum}</h3>
+        <p><strong>Fecha:</strong> ${fecha}</p>
+        <p><strong>Hora:</strong> ${hora}</p>
+        <div style="margin-top:10px;">${itemsHTML}</div>
+      `;
+
+      contenedor.appendChild(card);
+    });
+
+    // Confirmar entrega de platillos listos
+    contenedor.addEventListener('click', (e) => {
+      if (e.target.classList.contains('confirmar-btn')) {
+        const mesa = e.target.dataset.mesa;
+        const index = e.target.dataset.index;
+
+        const pedidos = JSON.parse(localStorage.getItem('pedidos')) || {};
+        if (pedidos[mesa] && pedidos[mesa][index]) {
+          pedidos[mesa][index].estado = 'entregado';
+          localStorage.setItem('pedidos', JSON.stringify(pedidos));
+          
+          e.target.parentElement.querySelector('span:nth-child(2)').textContent = 'ENTREGADO';
+          e.target.parentElement.querySelector('span:nth-child(2)').style.color = '#2E8B57';
+          e.target.remove();
+        }
+      }
+    });
+  });
+  </script>
+</body>
+</html>
