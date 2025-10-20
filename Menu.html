@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menú Taquería</title>
+  <title>Taquería El Informático - Menú</title>
   <link rel="stylesheet" href="estilos.css">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <header>
     <div class="header-top">
-      <h1>Menú Taquería - Mesa <span id="mesa-numero">?</span></h1>
+      <h1>Taquería El Informático - Mesa <span id="mesa-numero">?</span></h1>
       <div id="header-cart" class="cart-icon">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count">0</span>
@@ -29,25 +29,19 @@
       <h2>Tacos</h2>
       <div class="menu-items">
         <div class="menu-item">
-          <div class="item-image">
-            <img src="img/pastor.jpeg" alt="Taco al Pastor">
-          </div>
+          <div class="item-image"><img src="img/pastor.jpeg" alt="Taco al Pastor"></div>
           <h3>Taco al Pastor</h3>
           <p class="price">$15</p>
           <button class="add-to-cart" data-item="Taco al Pastor" data-price="15">Agregar</button>
         </div>
         <div class="menu-item">
-          <div class="item-image">
-            <img src="img/suadero.jpeg" alt="Taco de Suadero">
-          </div>
+          <div class="item-image"><img src="img/suadero.jpeg" alt="Taco de Suadero"></div>
           <h3>Taco de Suadero</h3>
           <p class="price">$18</p>
           <button class="add-to-cart" data-item="Taco de Suadero" data-price="18">Agregar</button>
         </div>
         <div class="menu-item">
-          <div class="item-image">
-            <img src="img/bistec.jpeg" alt="Taco de Bistec">
-          </div>
+          <div class="item-image"><img src="img/bistec.jpeg" alt="Taco de Bistec"></div>
           <h3>Taco de Bistec</h3>
           <p class="price">$20</p>
           <button class="add-to-cart" data-item="Taco de Bistec" data-price="20">Agregar</button>
@@ -60,17 +54,13 @@
       <h2>Bebidas</h2>
       <div class="menu-items">
         <div class="menu-item">
-          <div class="item-image">
-            <img src="img/jamaica.png" alt="Agua de Jamaica">
-          </div>
+          <div class="item-image"><img src="img/jamaica.png" alt="Agua de Jamaica"></div>
           <h3>Agua de Jamaica</h3>
           <p class="price">$12</p>
           <button class="add-to-cart" data-item="Agua de Jamaica" data-price="12">Agregar</button>
         </div>
         <div class="menu-item">
-          <div class="item-image">
-            <img src="img/refrescos.jpeg" alt="Refresco">
-          </div>
+          <div class="item-image"><img src="img/refrescos.jpeg" alt="Refresco"></div>
           <h3>Refresco</h3>
           <p class="price">$18</p>
           <button class="add-to-cart" data-item="Refresco" data-price="18">Agregar</button>
@@ -97,25 +87,21 @@
         <span>Total:</span>
         <span id="cart-total-amount">$0.00</span>
       </div>
-      <button class="checkout-btn">Pagar</button>
+      <button class="checkout-btn">Realizar Pedido</button>
     </div>
   </div>
 
-  <!-- Modal de pago -->
-  <div id="payment-modal" class="modal">
-    <div class="modal-content">
+  <!-- Modal del ticket -->
+  <div id="ticket-modal" class="modal">
+    <div class="modal-content" id="ticket-content">
       <div class="modal-header">
-        <h2>Confirmar Pago - Mesa <span id="payment-mesa-numero">?</span></h2>
+        <h2>Ticket del Pedido</h2>
         <span class="close-modal">&times;</span>
       </div>
-      <div class="modal-body">
-        <div id="payment-items"></div>
-        <div class="payment-total">
-          <span>Total:</span>
-          <span id="payment-total-amount">$0.00</span>
-        </div>
-      </div>
-      <button class="confirm-payment-btn">Confirmar Pago</button>
+      <div class="modal-body" id="ticket-body"></div>
+      <button class="confirm-payment-btn" id="descargar-ticket">Descargar Ticket (PDF)</button>
+      <button class="confirm-payment-btn" id="seguir-pidiendo">Seguir Pidiendo</button>
+      <button class="confirm-payment-btn" id="cerrar-ticket">Cerrar Ticket</button>
     </div>
   </div>
 
