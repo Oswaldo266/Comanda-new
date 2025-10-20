@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taquería El Informático - Cocina</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <h1>Taquería El Informático - Cocina</h1>
+      <div>
+        <a href="index.html" style="color:white; text-decoration:none; font-weight:bold;">
+          ← Volver al inicio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="menu-section">
+      <h2>Pedidos Activos</h2>
+      <div id="pedidos-container" class="menu-items"></div>
+    </section>
+  </main>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const contenedor = document.getElementById('pedidos-container');
+    const pedidos = JSON.parse(localStorage.getItem('pedidos')) || {};
+
+    if (Object.keys(pedidos).length === 0) {
+      contenedor.innerHTML = '<p class="empty-cart-message">No hay pedidos activos</p>';
+      return;
+    }
+
+    Object.entries(pedidos).forEach(([mesaKey, pedido]) => {
+      const mesaNum = mesaKey.split('_')[1];
+      const fecha = new Date().toLocaleDateString();
+      const hora = new Date().toLocaleTimeString();
+      let total = 0;
+
+      const card = document.createElement('div');
+      card.classList.add('menu-item');
+      
+      const itemsHTML = pedido.map((item, idx) => {
+        total += (item.cantidad * (item.precio || 0));
+        return `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span>${item.nombre} x${item.cantidad}</span>
+            <select class="estado-item" data-mesa="${mesaKey}" data-index="${idx}">
+              <option value="pendiente" ${item.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+              <option value="preparando" ${item.estado === 'preparando' ? 'selected' : ''}>Preparando</option>
+              <option value="listo" ${item.estado === 'listo' ? 'selected' : ''}>Listo</option>
+            </select>
+          </div>`;
+      }).join('');
+
+      card.innerHTML = `
+        <h3>Mesa ${mesaNum}</h3>
+        <p><strong>Fecha:</strong> ${fecha}</p>
+        <p><strong>Hora:</strong> ${hora}</p>
+        <div style="margin-top:10px;">${itemsHTML}</div>
+        <p style="margin-top:10px; font-weight:bold; color:#DC143C;">Total: $${total.toFixed(2)}</p>
+        <button class="checkout-btn cerrar-pedido" data-mesa="${mesaKey}" style="margin-top:10px;">Cerrar Pedido</button>
+      `;
+      contenedor.appendChild(card);
+    });
+
+    // Actualizar estado del pedido
+    contenedor.addEventListener('change', (e) => {
+      if (e.target.classList.contains('estado-item')) {
+        const mesa = e.target.dataset.mesa;
+        const index = e.target.dataset.index;
+        const nuevoEstado = e.target.value;
+        const pedidos = JSON.parse(localStorage.getItem('pedidos')) || {};
+        if (pedidos[mesa] && pedidos[mesa][index]) {
+          pedidos[mesa][index].estado = nuevoEstado;
+          localStorage.setItem('pedidos', JSON.stringify(pedidos));
+        }
+      }
+    });
+
+    // Cerrar pedido (se elimina del storage)
+    contenedor.addEventListener('click', (e) => {
+      if (e.target.classList.contains('cerrar-pedido')) {
+        const mesa = e.target.dataset.mesa;
+        const pedidos = JSON.parse(localStorage.getItem('pedidos')) || {};
+        delete pedidos[mesa];
+        localStorage.setItem('pedidos', JSON.stringify(pedidos));
+        e.target.closest('.menu-item').remove();
+        if (Object.keys(pedidos).length === 0) {
+          contenedor.innerHTML = '<p class="empty-cart-message">No hay pedidos activos</p>';
+        }
+      }
+    });
+  });
+  </script>
+</body>
+</html>
