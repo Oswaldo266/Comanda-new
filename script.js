@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     const cart = [];
     let total = 0;
+    const mesaNumero = new URLSearchParams(window.location.search).get('mesa') || '?';
     
-    // Elementos del DOM
+    const mesaNumeroEl = document.getElementById('mesa-numero');
+    const cartMesaNumeroEl = document.getElementById('cart-mesa-numero');
+    if (mesaNumeroEl) mesaNumeroEl.textContent = mesaNumero;
+    if (cartMesaNumeroEl) cartMesaNumeroEl.textContent = mesaNumero;
+
     const cartItemsEl = document.getElementById('cart-items');
     const cartTotalEl = document.getElementById('cart-total-amount');
     const cartBadgeEl = document.querySelector('.cart-badge');
@@ -14,11 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerCartEl = document.getElementById('header-cart');
     const checkoutBtn = document.querySelector('.checkout-btn');
     
-    // Función para actualizar el carrito
+    const ticketModalEl = document.getElementById('ticket-modal');
+    const ticketBodyEl = document.getElementById('ticket-body');
+    const closeTicketModal = document.querySelector('.close-modal');
+    const descargarTicketBtn = document.getElementById('descargar-ticket');
+    const seguirPidiendoBtn = document.getElementById('seguir-pidiendo');
+    const cerrarTicketBtn = document.getElementById('cerrar-ticket');
+
+    // Actualiza el carrito
     function updateCart() {
-        // Limpiar el carrito
         cartItemsEl.innerHTML = '';
-        
         if (cart.length === 0) {
             cartItemsEl.innerHTML = '<p class="empty-cart-message">No has agregado items a tu pedido</p>';
             cartTotalEl.textContent = '$0.00';
@@ -26,138 +36,135 @@ document.addEventListener('DOMContentLoaded', function() {
             headerCartCountEl.textContent = '0';
             return;
         }
-        
-        // Agregar items al carrito
         cart.forEach(item => {
-            const cartItemEl = document.createElement('div');
-            cartItemEl.classList.add('cart-item');
-            
-            cartItemEl.innerHTML = `
+            const itemEl = document.createElement('div');
+            itemEl.classList.add('cart-item');
+            itemEl.innerHTML = `
                 <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="cart-item-controls">
+                        <button class="quantity-btn minus-btn" data-id="${item.id}">-</button>
+                        <span class="quantity-display">${item.quantity}</span>
+                        <button class="quantity-btn plus-btn" data-id="${item.id}">+</button>
+                        <span class="cart-item-remove" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                    </div>
                 </div>
-                <span class="cart-item-remove" data-id="${item.id}">
-                    <i class="fas fa-times"></i>
-                </span>
             `;
-            
-            cartItemsEl.appendChild(cartItemEl);
+            cartItemsEl.appendChild(itemEl);
         });
-        
-        // Calcular total
-        total = cart.reduce((sum, item) => sum + item.price, 0);
+        total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
         cartTotalEl.textContent = `$${total.toFixed(2)}`;
-        
-        // Actualizar contadores
-        cartBadgeEl.textContent = cart.length;
-        headerCartCountEl.textContent = cart.length;
-        
-        // Agregar event listeners a los botones de eliminar
-        document.querySelectorAll('.cart-item-remove').forEach(button => {
-            button.addEventListener('click', function() {
-                const itemId = parseInt(this.getAttribute('data-id'));
-                removeFromCart(itemId);
-            });
-        });
+        const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+        cartBadgeEl.textContent = count;
+        headerCartCountEl.textContent = count;
+
+        document.querySelectorAll('.minus-btn').forEach(btn =>
+            btn.addEventListener('click', () => changeQty(btn.dataset.id, -1))
+        );
+        document.querySelectorAll('.plus-btn').forEach(btn =>
+            btn.addEventListener('click', () => changeQty(btn.dataset.id, 1))
+        );
+        document.querySelectorAll('.cart-item-remove').forEach(btn =>
+            btn.addEventListener('click', () => removeFromCart(btn.dataset.id))
+        );
     }
-    
-    // Función para agregar al carrito
+
     function addToCart(name, price) {
-        const newItem = {
-            id: Date.now(), // ID único
-            name: name,
-            price: parseFloat(price)
-        };
-        
-        cart.push(newItem);
+        const found = cart.find(i => i.name === name);
+        if (found) found.quantity++;
+        else cart.push({ id: Date.now(), name, price: parseFloat(price), quantity: 1 });
         updateCart();
-        
-        // Mostrar notificación
-        showNotification(`${name} agregado al carrito`);
+        showNotification(`${name} agregado`);
     }
-    
-    // Función para eliminar del carrito
-    function removeFromCart(itemId) {
-        const itemIndex = cart.findIndex(item => item.id === itemId);
-        if (itemIndex !== -1) {
-            const removedItem = cart.splice(itemIndex, 1)[0];
-            updateCart();
-            showNotification(`${removedItem.name} eliminado del carrito`);
-        }
+
+    function changeQty(id, delta) {
+        const item = cart.find(i => i.id == id);
+        if (!item) return;
+        item.quantity += delta;
+        if (item.quantity <= 0) removeFromCart(id);
+        updateCart();
     }
-    
-    // Función para mostrar notificación
-    function showNotification(message) {
-        // Eliminar notificación existente si hay una
-        const existingNotification = document.querySelector('.notification');
-        if (existingNotification) {
-            existingNotification.remove();
-        }
-        
-        const notification = document.createElement('div');
-        notification.classList.add('notification');
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        // Eliminar la notificación después de 3 segundos
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+
+    function removeFromCart(id) {
+        const idx = cart.findIndex(i => i.id == id);
+        if (idx >= 0) cart.splice(idx, 1);
+        updateCart();
     }
-    
-    // Event listeners para botones "Agregar"
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemName = this.getAttribute('data-item');
-            const itemPrice = this.getAttribute('data-price');
-            addToCart(itemName, itemPrice);
-        });
+
+    function showNotification(msg) {
+        const n = document.createElement('div');
+        n.className = 'notification';
+        n.textContent = msg;
+        document.body.appendChild(n);
+        setTimeout(() => n.remove(), 3000);
+    }
+
+    // Abrir carrito
+    floatingCartEl.addEventListener('click', () => (cartModalEl.style.display = 'flex'));
+    headerCartEl.addEventListener('click', () => (cartModalEl.style.display = 'flex'));
+    closeCartEl.addEventListener('click', () => (cartModalEl.style.display = 'none'));
+    cartModalEl.addEventListener('click', e => {
+        if (e.target === cartModalEl) cartModalEl.style.display = 'none';
     });
-    
-    // Event listener para el botón de carrito flotante
-    floatingCartEl.addEventListener('click', function() {
-        cartModalEl.style.display = 'flex';
+
+    // Confirmar pedido (mostrar ticket)
+    checkoutBtn.addEventListener('click', () => {
+        if (cart.length === 0) return showNotification('Tu carrito está vacío');
+        mostrarTicket();
     });
-    
-    // Event listener para el icono de carrito en el header
-    headerCartEl.addEventListener('click', function() {
-        cartModalEl.style.display = 'flex';
+
+    // Mostrar ticket visual
+    function mostrarTicket() {
+        const now = new Date();
+        const fecha = now.toLocaleDateString();
+        const hora = now.toLocaleTimeString();
+        ticketBodyEl.innerHTML = `
+            <pre style="font-family: monospace; text-align:center;">
+TAQUERÍA EL INFORMÁTICO
+----------------------------------------
+Mesa: ${mesaNumero}
+Fecha: ${fecha}   Hora: ${hora}
+----------------------------------------
+${cart.map(i => `${i.name.padEnd(20)} x${i.quantity}  $${(i.price * i.quantity).toFixed(2)}`).join('\n')}
+----------------------------------------
+TOTAL: $${total.toFixed(2)}
+----------------------------------------
+¡Gracias por tu pedido!
+</pre>
+        `;
+        ticketModalEl.style.display = 'flex';
+    }
+
+    // Descargar ticket como PDF
+    descargarTicketBtn.addEventListener('click', () => {
+        const contenido = ticketBodyEl.innerText;
+        const blob = new Blob([contenido], { type: "application/pdf" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `Ticket_Mesa_${mesaNumero}.pdf`;
+        link.click();
     });
-    
-    // Event listener para cerrar el modal
-    closeCartEl.addEventListener('click', function() {
-        cartModalEl.style.display = 'none';
+
+    // Seguir pidiendo
+    seguirPidiendoBtn.addEventListener('click', () => {
+        ticketModalEl.style.display = 'none';
     });
-    
-    // Cerrar modal al hacer clic fuera del contenido
-    cartModalEl.addEventListener('click', function(e) {
-        if (e.target === cartModalEl) {
-            cartModalEl.style.display = 'none';
-        }
+
+    // Cerrar ticket (limpiar pedido)
+    cerrarTicketBtn.addEventListener('click', () => {
+        alert('Pedido cerrado correctamente.');
+        localStorage.clear();
+        window.location.href = 'index.html';
     });
-    
-    // Event listener para el botón de pago
-    checkoutBtn.addEventListener('click', function() {
-        if (cart.length === 0) {
-            showNotification('Tu carrito está vacío');
-            return;
-        }
-        
-        // Simular proceso de pago
-        showNotification(`Redirigiendo al pago... Total: $${total.toFixed(2)}`);
-        
-        // Aquí iría la lógica real de redirección a la pasarela de pago
-        setTimeout(() => {
-            alert(`¡Gracias por tu compra! Total pagado: $${total.toFixed(2)}`);
-            
-            // Vaciar carrito después de la compra
-            cart.length = 0;
-            updateCart();
-            cartModalEl.style.display = 'none';
-        }, 2000);
-    });
-    
-    // Inicializar carrito
+
+    closeTicketModal.addEventListener('click', () => (ticketModalEl.style.display = 'none'));
+
+    addToCartButtons.forEach(btn =>
+        btn.addEventListener('click', () => addToCart(btn.dataset.item, btn.dataset.price))
+    );
+
     updateCart();
 });
