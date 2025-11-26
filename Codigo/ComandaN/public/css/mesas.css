@@ -1,0 +1,27 @@
+.mesas {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 30px;
+  gap: 20px;
+}
+.mesa {
+  background: #fff;
+  border: 2px solid #8B0000;
+  border-radius: 12px;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  color: #8B0000;
+  transition: transform 0.2s, background 0.3s;
+}
+.mesa:hover {
+  transform: scale(1.1);
+  background: #DC143C;
+  color: white;
+}

@@ -1,0 +1,11 @@
+.pedido {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+.pedido h3 {
+  margin: 0;
+  color: #8B0000;
+}
